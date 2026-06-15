@@ -1,0 +1,6 @@
+{
+  "name": "ROCK MUSIC",
+  "description": "Premium Rock Music player featuring offline playback, playlists, lyrics, Echo Find (song recognition), and social sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

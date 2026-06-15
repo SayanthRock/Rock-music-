@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Outer Electric Fire Glow -->
+    <path
+        android:fillColor="#15FFFFFF"
+        android:strokeColor="#55FF5722"
+        android:strokeWidth="1.5"
+        android:pathData="M 54,20 A 34,34 0 1 0 54,88 A 34,34 0 1 0 54,20 Z" />
+
+    <!-- Neon EQ pulse waves inside icon -->
+    <path
+        android:fillColor="#33E91E63"
+        android:pathData="M 34,44 L 34,64 L 38,64 L 38,44 Z" />
+    <path
+        android:fillColor="#55E91E63"
+        android:pathData="M 42,34 L 42,74 L 46,74 L 46,34 Z" />
+    <path
+        android:fillColor="#55E91E63"
+        android:pathData="M 62,34 L 62,74 L 66,74 L 66,34 Z" />
+    <path
+        android:fillColor="#33E91E63"
+        android:pathData="M 70,44 L 70,64 L 74,64 L 74,44 Z" />
+
+    <!-- Centered stylized electric guitar vector emblem -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M 54,32 
+            C 51,32 49,34 49,37 
+            C 49,42 45,45 45,48 
+            C 45,55 50,56 50,58 
+            C 50,60 48,60 48,61 
+            C 48,62 50,64 54,64 
+            C 58,64 60,62 60,61 
+            C 60,60 58,60 58,58 
+            C 58,56 63,55 63,48 
+            C 63,45 59,42 59,37 
+            C 59,34 57,32 54,32 Z" />
+            
+    <!-- Guitar Fret Board Neck and Headstock pointing up -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M 53,32 
+            L 53,16 
+            L 51,16 
+            L 51,14 
+            H 57 
+            V 16 
+            L 55,16 
+            L 55,32 Z" />
+            
+    <!-- Lightning bolt cuts on the wings of launcher logo -->
+    <path
+        android:fillColor="#FFFFEB3B"
+        android:pathData="M 32,54 L 40,46 L 36,46 L 44,36 L 38,50 L 42,50 Z" />
+    <path
+        android:fillColor="#FFFFEB3B"
+        android:pathData="M 76,54 L 68,46 L 72,46 L 64,36 L 70,50 L 66,50 Z" />
+</vector>
