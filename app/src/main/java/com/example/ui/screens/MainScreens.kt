@@ -57,7 +57,7 @@ fun HomeScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         // Welcome Header & Neon Glow Pitch
         item {
@@ -267,7 +267,7 @@ fun SearchScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         item {
             Text(
@@ -495,7 +495,7 @@ fun LibraryScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         item {
             Text(
@@ -685,74 +685,79 @@ fun SettingsScreen(
 ) {
     val discordEnabled by viewModel.isDiscordPresenceEnabled.collectAsState()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 170.dp)
     ) {
-        Text(
-            text = "Engine Settings",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
-            color = Color.White
-        )
+        item {
+            Text(
+                text = "Engine Settings",
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                color = Color.White
+            )
+        }
 
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = RockSurface),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "DISCORD RICH PRESENCE",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = RockSecondary
-                )
-                Text(
-                    text = "Sync active song tracks, artists, and live album art onto your Discord profile status.",
-                    fontSize = 12.sp,
-                    color = RockMuted,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Show Status on Discord", color = Color.White, fontWeight = FontWeight.Medium)
-                    Switch(
-                        checked = discordEnabled,
-                        onCheckedChange = { viewModel.toggleDiscordPresence(it) },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = RockSecondary,
-                            checkedTrackColor = RockPrimary
-                        ),
-                        modifier = Modifier.testTag("discord_switch_toggle")
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = RockSurface),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "DISCORD RICH PRESENCE",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = RockSecondary
                     )
+                    Text(
+                        text = "Sync active song tracks, artists, and live album art onto your Discord profile status.",
+                        fontSize = 12.sp,
+                        color = RockMuted,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Show Status on Discord", color = Color.White, fontWeight = FontWeight.Medium)
+                        Switch(
+                            checked = discordEnabled,
+                            onCheckedChange = { viewModel.toggleDiscordPresence(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = RockSecondary,
+                                checkedTrackColor = RockPrimary
+                            ),
+                            modifier = Modifier.testTag("discord_switch_toggle")
+                        )
+                    }
                 }
             }
         }
 
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = RockSurface),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = RockSurface),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "SYSTEM ARCHITECTURE",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = RockPrimary
-                )
-                SettingsInfoRow(label = "Platform", value = "Android JVM Client")
-                SettingsInfoRow(label = "Audio Core Engine", value = "Media3 ExoPlayer Wrapper")
-                SettingsInfoRow(label = "Local Persistence", value = "SQLite / Room Database")
-                SettingsInfoRow(label = "Integration Hub", value = "WebSocket sync server")
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "SYSTEM ARCHITECTURE",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = RockPrimary
+                    )
+                    SettingsInfoRow(label = "Platform", value = "Android JVM Client")
+                    SettingsInfoRow(label = "Audio Core Engine", value = "Media3 ExoPlayer Wrapper")
+                    SettingsInfoRow(label = "Local Persistence", value = "SQLite / Room Database")
+                    SettingsInfoRow(label = "Integration Hub", value = "WebSocket sync server")
+                }
             }
         }
     }
@@ -785,7 +790,7 @@ fun EchoFindScreen(
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         item {
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
@@ -968,7 +973,7 @@ fun ListenTogetherScreen(
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -1185,7 +1190,7 @@ fun PlaylistDetailScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 170.dp)
     ) {
         item {
             IconButton(onClick = onBack, modifier = Modifier.testTag("playlist_back_btn")) {
