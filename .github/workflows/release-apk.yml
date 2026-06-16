@@ -26,11 +26,10 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Grant Execute Permission to Gradle Wrapper
-        # In some imported environments the gradle wrapper might need permissions,
-        # but in this environment we run gradle directly via command-line gradle.
-        # For general CI environments using standard Gradle wrapper is recommended.
-        run: chmod +x gradlew || true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11'
 
       - name: Prepare Keystore File
         # If the user has a production upload key, we can decode it from secrets.
@@ -49,12 +48,22 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          # Determine correct gradle command (use wrapper if present, otherwise system/setup-gradle)
+          if [ -f "gradlew" ]; then
+            chmod +x gradlew
+            GRADLE_CMD="./gradlew"
+            echo "Using committed Gradle Wrapper: $GRADLE_CMD"
+          else
+            GRADLE_CMD="gradle"
+            echo "Gradle Wrapper not found. Falling back to system Gradle installed by setup-gradle action: $GRADLE_CMD"
+          fi
+
           if [ -f "my-upload-key.jks" ]; then
             echo "Building Release APK..."
-            ./gradlew assembleRelease
+            $GRADLE_CMD assembleRelease
           else
             echo "Building Debug APK as release key is not configured..."
-            ./gradlew assembleDebug
+            $GRADLE_CMD assembleDebug
           fi
 
       - name: Locate and Rename Artifacts
