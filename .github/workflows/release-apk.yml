@@ -1,0 +1,99 @@
+name: Build & Release Rock Music APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant Execute Permission to Gradle Wrapper
+        # In some imported environments the gradle wrapper might need permissions,
+        # but in this environment we run gradle directly via command-line gradle.
+        # For general CI environments using standard Gradle wrapper is recommended.
+        run: chmod +x gradlew || true
+
+      - name: Prepare Keystore File
+        # If the user has a production upload key, we can decode it from secrets.
+        # This setup decodes standard Base64 stored inside sign-in secrets.
+        run: |
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "Decoding Keystore file..."
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-upload-key.jks
+          else
+            echo "No production keystore secret found. Building default/debug configuration or using preconfigured signing."
+          fi
+
+      - name: Build APKs
+        env:
+          KEYSTORE_PATH: "my-upload-key.jks"
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -f "my-upload-key.jks" ]; then
+            echo "Building Release APK..."
+            ./gradlew assembleRelease
+          else
+            echo "Building Debug APK as release key is not configured..."
+            ./gradlew assembleDebug
+          fi
+
+      - name: Locate and Rename Artifacts
+        id: rename_apk
+        run: |
+          # Find any built APK file
+          APK_PATH=$(find app/build/outputs/apk/ -name "*.apk" | head -n 1)
+          if [ -n "$APK_PATH" ]; then
+            VERSION_NAME=$(grep -o "versionName = \".*\"" app/build.gradle.kts | cut -d'"' -f2 || echo "1.1")
+            NEW_NAME="RockMusic-v${VERSION_NAME}.apk"
+            cp "$APK_PATH" "$NEW_NAME"
+            echo "Renamed $APK_PATH to $NEW_NAME"
+            echo "apk_path=$NEW_NAME" >> $GITHUB_OUTPUT
+            echo "apk_name=$NEW_NAME" >> $GITHUB_OUTPUT
+          else
+            echo "Error: No APK file found!"
+            exit 1
+          fi
+
+      - name: Create GitHub Release and Upload APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.rename_apk.outputs.apk_path }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ### Rock Music Release ${{ github.ref_name }}
+            
+            We are pleased to publish the latest clean-state build of **Rock Music** (Echo Music)! This APK is optimized for Android, incorporating performance fixes, design enhancements, and robust local caching.
+            
+            #### 📦 Included Artifacts
+            - `${{ steps.rename_apk.outputs.apk_name }}` (Universal Android Installation Package)
+            
+            #### 🚀 Release Highlights
+            - **Persistent Bottom Mini-Player**: Access music playback instantly from anywhere in the library.
+            - **Local Persistent Storage**: SQLite-backed playlist and favorite tracks caching.
+            - **Optimized UI Elements**: Refreshed slate theme with responsive padding/margins.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
